@@ -12,6 +12,9 @@
 #ifdef STM32H743xx
 #include "stm32h7/stm32h743xx/clocks.h"
 #endif
+#ifdef STM32H755xx
+#include "stm32h7/stm32h755xx/clocks.h"
+#endif
 
 void stm32_peripherals_clocks_init(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -19,7 +22,7 @@ void stm32_peripherals_clocks_init(void) {
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
     // Set voltage scaling in accordance with system clock speed
-    HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
+    HAL_PWREx_ConfigSupply(PWR_DIRECT_SMPS_SUPPLY);
     __HAL_PWR_VOLTAGESCALING_CONFIG(CPY_CLK_VSCALE);
     while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {
     }

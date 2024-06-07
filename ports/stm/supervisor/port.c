@@ -277,6 +277,7 @@ condition and generating hardware reset or using Go command to execute user code
 }
 
 void reset_cpu(void) {
+    while (true) {}
     NVIC_SystemReset();
 }
 
@@ -287,7 +288,9 @@ uint32_t *port_heap_get_bottom(void) {
 }
 
 uint32_t *port_heap_get_top(void) {
-    return port_stack_get_limit();
+    //TODO: This only works for TCM memories, check the common ld files for differences
+    // return port_stack_get_limit();
+    return &_ld_heap_end;
 }
 
 uint32_t *port_stack_get_limit(void) {

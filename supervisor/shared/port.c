@@ -30,7 +30,7 @@ MP_WEAK void port_heap_init(void) {
     uint32_t *heap_bottom = port_heap_get_bottom();
     uint32_t *heap_top = port_heap_get_top();
     size_t size = (heap_top - heap_bottom) * sizeof(uint32_t);
-    heap = tlsf_create_with_pool(heap_bottom, size, size);
+    heap = tlsf_create_with_pool(heap_bottom, size, size); 
 }
 
 MP_WEAK void *port_malloc(size_t size, bool dma_capable) {

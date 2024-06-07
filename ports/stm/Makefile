@@ -38,7 +38,7 @@ ifeq ($(DEBUG), 1)
 	CFLAGS += -fno-inline -fno-ipa-sra
 else
 	CFLAGS += -DNDEBUG
-	OPTIMIZATION_FLAGS ?= -O2 -fno-inline-functions
+	OPTIMIZATION_FLAGS = -O1 -fno-inline -fvar-tracking -fvar-tracking-assignments
 	CFLAGS += -ggdb3
 endif
 
@@ -49,7 +49,7 @@ CFLAGS += $(OPTIMIZATION_FLAGS)
 CFLAGS += -ftree-vrp
 
 # MCU Series is defined by the HAL package and doesn't need to be specified here
-C_DEFS = -D$(MCU_PACKAGE) -DUSE_HAL_DRIVER -DUSE_FULL_LL_DRIVER -D$(MCU_VARIANT)
+C_DEFS = -D$(MCU_PACKAGE) -DUSE_HAL_DRIVER -DUSE_FULL_LL_DRIVER -D$(MCU_VARIANT) -DCORE_CM7
 
 CFLAGS += $(INC) -Werror -Wall -std=gnu11 -fshort-enums $(BASE_CFLAGS) $(C_DEFS) $(CFLAGS_MOD) $(COPT) -nostdlib -nostartfiles
 
@@ -73,7 +73,7 @@ CFLAGS += -DSTM32_HAL_H="<stm32$(MCU_SERIES_LOWER)xx_hal.h>"
 CFLAGS += -DSTM32_SERIES_LOWER='"stm32$(MCU_SERIES_LOWER)"'
 
 # Floating point settings
-ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32F765xx STM32F767xx STM32F769xx STM32H743xx))
+ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32F765xx STM32H755xx STM32F767xx STM32F769xx STM32H743xx))
 CFLAGS += -mfpu=fpv5-d16 -mfloat-abi=hard
 else
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
@@ -165,7 +165,7 @@ endif
 
 # Need this to avoid UART linker problems. TODO: rewrite to use registered callbacks.
 # Does not exist for F4 and lower
-ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32F765xx STM32F767xx STM32F769xx STM32H743xx STM32L4R5xx))
+ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32F765xx STM32F767xx STM32F769xx STM32H743xx STM32H755xx STM32L4R5xx))
 	SRC_STM32 += $(HAL_DIR)/Src/stm32$(MCU_SERIES_LOWER)xx_hal_uart_ex.c
 endif
 
@@ -238,7 +238,7 @@ SRC_QSTR += $(SRC_C) $(SRC_SUPERVISOR) $(SRC_MOD) $(SRC_COMMON_HAL_EXPANDED) $(S
 SRC_QSTR_PREPROCESSOR +=
 
 # Bin section settings specific to the STM32H7
-ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32H743xx))
+ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32H755xx))
 MCU_SECTIONS = -j .isr_vector -j .text -j .data -j .itcm -j .dtcm_data $^ $@
 else
 MCU_SECTIONS = $^ $@
