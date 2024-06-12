@@ -315,7 +315,7 @@ size_t common_hal_busio_uart_write(busio_uart_obj_t *self, const uint8_t *data, 
             Status = HAL_UART_GetState(&self->handle);
         }
     } else {
-        mp_raise_RuntimeError(MP_ERROR_TEXT("UART write"));
+        // mp_raise_RuntimeError(MP_ERROR_TEXT("UART write"));
     }
 
     return len;
