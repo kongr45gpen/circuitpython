@@ -269,7 +269,11 @@ void RTC_WKUP_IRQHandler(void) {
         wkup_callback();
     }
     __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
+    #if defined(DUAL_CORE) && defined(CORE_CM4)
+    __HAL_RTC_WAKEUPTIMER_EXTID2_CLEAR_FLAG();
+    #else
     __HAL_RTC_WAKEUPTIMER_EXTI_CLEAR_FLAG();
+    #endif
     hrtc.State = HAL_RTC_STATE_READY;
 }
 

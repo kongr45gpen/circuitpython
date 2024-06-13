@@ -42,7 +42,7 @@
 
 void NVIC_SystemReset(void) NORETURN;
 
-#if (CPY_STM32H7) || (CPY_STM32F7)
+#if CPY_TCM
 
 // Device memories must be accessed in order.
 #define DEVICE 2
@@ -140,7 +140,7 @@ __attribute__((used, naked)) void Reset_Handler(void) {
     __enable_irq();
     main();
 }
-#endif // end H7 specific code
+#endif // end TCM specific code
 
 // Low power clock variables
 static volatile uint32_t systick_ms;
@@ -287,7 +287,7 @@ uint32_t *port_heap_get_bottom(void) {
 }
 
 uint32_t *port_heap_get_top(void) {
-    #if (CPY_STM32H7) || (CPY_STM32F7)
+    #if CPY_TCM
     return &_ld_heap_end;
     #else
     return port_stack_get_limit();

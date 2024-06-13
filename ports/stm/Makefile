@@ -61,22 +61,24 @@ CFLAGS += -Wno-undef -Wno-shadow -Wno-cast-align $(ADD_CFLAGS)
 CFLAGS += -mthumb -mabi=aapcs-linux
 
 # Arm core selection
-MCU_FLAGS_L4 = -mcpu=cortex-m4
-MCU_FLAGS_F4 = -mcpu=cortex-m4
-MCU_FLAGS_F7 = -mcpu=cortex-m7
-MCU_FLAGS_H7 = -mcpu=cortex-m7
+ARM_CORTEX_L4 = m4
+ARM_CORTEX_F4 = m4
+ARM_CORTEX_F7 = m7
+ARM_CORTEX_H7 = m7
 
 ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32H755xx))
 	ifeq ($(MCU_CORE), $(filter $(MCU_CORE),CM4))
-		MCU_FLAGS_H7 = -mcpu=cortex-m4 -DCORE_CM4
+		ARM_CORTEX_H7 = m4
+		CFLAGS += -DCORE_CM4
 	else ifeq ($(MCU_CORE), $(filter $(MCU_CORE),CM7))
-		MCU_FLAGS_H7 = -mcpu=cortex-m7 -DCORE_CM7
+		ARM_CORTEX_H7 = m7
+		CFLAGS += -DCORE_CM7
 	else
 		$(error MCU_CORE must be set to CM4 or CM7 for dual-core processors)
 	endif
 endif
 
-CFLAGS += $(MCU_FLAGS_$(MCU_SERIES))
+CFLAGS += -mcpu=cortex-$(ARM_CORTEX_$(MCU_SERIES))
 
 # Select HAL file for distribution via mpconfigport
 CFLAGS += -DSTM32_HAL_H="<stm32$(MCU_SERIES_LOWER)xx_hal.h>"
@@ -84,10 +86,17 @@ CFLAGS += -DSTM32_HAL_H="<stm32$(MCU_SERIES_LOWER)xx_hal.h>"
 CFLAGS += -DSTM32_SERIES_LOWER='"stm32$(MCU_SERIES_LOWER)"'
 
 # Floating point settings
-ifeq ($(MCU_VARIANT),$(filter $(MCU_VARIANT),STM32F765xx STM32F767xx STM32F769xx STM32H743xx STM32H755xx))
+ifeq ($(ARM_CORTEX_$(MCU_SERIES)),$(filter $(ARM_CORTEX_$(MCU_SERIES)),m7))
 CFLAGS += -mfpu=fpv5-d16 -mfloat-abi=hard
 else
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+endif
+
+# TCM settings
+ifeq ($(ARM_CORTEX_$(MCU_SERIES)),$(filter $(ARM_CORTEX_$(MCU_SERIES)),m7))
+CFLAGS += -DCPY_TCM=1
+else
+CFLAGS += -DCPY_TCM=0
 endif
 
 # Need both command and valid file to use uf2 bootloader
