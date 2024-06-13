@@ -92,3 +92,6 @@ extern const mp_obj_type_t mcu_pin_type;
 #ifdef STM32H743xx
 #include "stm32h7/stm32h743xx/pins.h"
 #endif
+#ifdef STM32H755xx
+#include "stm32h7/stm32h755xx/pins.h"
+#endif

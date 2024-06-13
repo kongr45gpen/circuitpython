@@ -8,8 +8,8 @@
 
 #include "stm32h7xx_hal.h"
 
-// Chip:                STM32H743
-// Line Type:           Single-Core
+// Chip:                STM32H755
+// Line Type:           Dual-Core
 // Speed:               480MHz (MAX)
 
 // Defaults:

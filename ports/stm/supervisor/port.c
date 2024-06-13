@@ -287,7 +287,11 @@ uint32_t *port_heap_get_bottom(void) {
 }
 
 uint32_t *port_heap_get_top(void) {
+    #if (CPY_STM32H7) || (CPY_STM32F7)
+    return &_ld_heap_end;
+    #else
     return port_stack_get_limit();
+    #endif
 }
 
 uint32_t *port_stack_get_limit(void) {
